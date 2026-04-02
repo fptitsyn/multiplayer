@@ -29,9 +29,9 @@ public class PlayerNetwork : NetworkBehaviour
         if (IsServer)
         {
             transform.position = new Vector3(
-                Random.Range(-6f, 7f),
+                Random.Range(-3f, 3f),
                 0,
-                Random.Range(-6f, 7f)
+                0
             );
         }
     }
