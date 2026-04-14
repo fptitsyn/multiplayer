@@ -37,9 +37,15 @@ public class MoveCharacter : NetworkBehaviour
 
     private void Walk()
     {
-        if (!IsOwner) return;
+        PlayerNetwork network = GetComponent<PlayerNetwork>();
+        if (!IsOwner)
+        {
+            Debug.Log(network.Nickname.Value + " is not owner");
+            return;
+        }
         
         Vector2 moveValue = _walkAction.ReadValue<Vector2>();
+        Debug.Log(moveValue + "" + network.Nickname.Value);
         if (_sprintAction.IsPressed() && moveValue is { y: > 0, x: 0 })
         {
             _moveSpeed = sprintMultiplier * walkSpeed;
