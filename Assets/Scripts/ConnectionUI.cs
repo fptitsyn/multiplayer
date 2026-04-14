@@ -14,6 +14,7 @@ public class ConnectionUI : MonoBehaviour
         SaveNickname();
         // Хост одновременно является сервером и клиентом.
         NetworkManager.Singleton.StartHost();
+        gameObject.SetActive(false);
     }
 
     public void StartAsClient()
@@ -21,6 +22,7 @@ public class ConnectionUI : MonoBehaviour
         SaveNickname();
         // Клиент только подключается к уже запущенному хосту/серверу.
         NetworkManager.Singleton.StartClient();
+        gameObject.SetActive(false);
     }
 
     private void SaveNickname()
@@ -28,5 +30,6 @@ public class ConnectionUI : MonoBehaviour
         // Нормализуем ввод, чтобы сервер не получил пустую строку.
         string rawValue = nicknameInput != null ? nicknameInput.text : string.Empty;
         PlayerNickname = string.IsNullOrWhiteSpace(rawValue) ? "Player" : rawValue.Trim();
+        nicknameInput.text = "";
     }
 }
