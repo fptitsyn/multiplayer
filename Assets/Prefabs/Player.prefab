@@ -396,6 +396,7 @@ GameObject:
   - component: {fileID: -2159294798613127865}
   - component: {fileID: 8498398823198989185}
   - component: {fileID: -7628443911098862674}
+  - component: {fileID: 7505252396995277737}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -691,3 +692,20 @@ MonoBehaviour:
   sprintMultiplier: 1.5
   jumpForce: 4
   distanceToGround: 0.8
+--- !u!114 &7505252396995277737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8483076605628575338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41dd4348d89746618e48ca7c6f242edb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCamera
+  ShowTopMostFoldoutHeaderGroup: 1
+  _distance: 8
+  _sensitivity: 5
+  _minY: -30
+  _maxY: 60

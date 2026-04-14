@@ -30,7 +30,7 @@ public class PlayerNetwork : NetworkBehaviour
         {
             transform.position = new Vector3(
                 Random.Range(-3f, 3f),
-                0.5f,
+                0.4f,
                 0
             );
         }
