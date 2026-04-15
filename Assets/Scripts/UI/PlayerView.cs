@@ -13,18 +13,18 @@ public class PlayerView : NetworkBehaviour
     {
         // Подписываемся на изменения только после сетевого спавна объекта.
         playerNetwork.Nickname.OnValueChanged += OnNicknameChanged;
-        playerNetwork.hp.OnValueChanged += OnHpChanged;
+        playerNetwork.HP.OnValueChanged += OnHpChanged;
 
         // Сразу рисуем текущее состояние, чтобы UI не ждал первого сетевого события.
         OnNicknameChanged(default, playerNetwork.Nickname.Value);
-        OnHpChanged(0, playerNetwork.hp.Value);
+        OnHpChanged(0, playerNetwork.HP.Value);
     }
 
     public override void OnNetworkDespawn()
     {
         // Отписка обязательна, чтобы не оставлять "висячие" обработчики.
         playerNetwork.Nickname.OnValueChanged -= OnNicknameChanged;
-        playerNetwork.hp.OnValueChanged -= OnHpChanged;
+        playerNetwork.HP.OnValueChanged -= OnHpChanged;
     }
 
     private void OnNicknameChanged(FixedString32Bytes oldValue, FixedString32Bytes newValue)

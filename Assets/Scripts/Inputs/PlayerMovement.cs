@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
 
-public class MoveCharacter : NetworkBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     [SerializeField] private float walkSpeed;
     [SerializeField] private float sprintMultiplier;
@@ -22,6 +22,8 @@ public class MoveCharacter : NetworkBehaviour
     private float _moveSpeed;
 
     private Camera _camera;
+    
+    private PlayerNetwork _network;
 
     private void Start()
     {
@@ -39,7 +41,7 @@ public class MoveCharacter : NetworkBehaviour
 
     private void Walk()
     {
-        if (!IsOwner)
+        if (!IsOwner || !_network.IsAlive.Value)
         {
             return;
         }
@@ -104,5 +106,6 @@ public class MoveCharacter : NetworkBehaviour
         if (!IsOwner) return;
 
         _camera = Camera.main;
+        _network = GetComponent<PlayerNetwork>();
     }
 }
