@@ -706,6 +706,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCamera
   ShowTopMostFoldoutHeaderGroup: 1
   _distance: 8
-  _sensitivity: 5
+  _sensitivity: 2
   _minY: -30
   _maxY: 60

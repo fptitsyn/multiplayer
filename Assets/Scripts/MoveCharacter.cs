@@ -21,6 +21,8 @@ public class MoveCharacter : NetworkBehaviour
     private Vector3 _velocity;
     private float _moveSpeed;
 
+    private Camera _camera;
+
     private void Start()
     {
         _walkAction = InputSystem.actions.FindAction("Move");
@@ -71,5 +73,36 @@ public class MoveCharacter : NetworkBehaviour
         
         _velocity.y += Gravity * Time.deltaTime;
         _controller.Move(_velocity * Time.deltaTime);
+        
+        Vector3 cameraForward = _camera.transform.forward;
+        cameraForward.y = 0f;
+        cameraForward.Normalize();
+
+        Vector3 horizontalMove = new Vector3(move.x, 0f, move.z);
+
+        Vector3 lookDirection = horizontalMove;
+
+        if (lookDirection.sqrMagnitude < 0.01f)
+        {
+            lookDirection = cameraForward;
+        }
+
+        if (lookDirection.sqrMagnitude > 0.01f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                10f * Time.deltaTime
+            );
+        }
+    }
+    
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner) return;
+
+        _camera = Camera.main;
     }
 }
