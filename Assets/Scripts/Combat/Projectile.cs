@@ -10,8 +10,6 @@ namespace Combat
         [SerializeField] private float _speed = 18f;
         [SerializeField] private int _damage = 20;
 
-        private bool _isDestroying;
-
         private void Update()
         {
             transform.Translate(Vector3.forward * (_speed * Time.deltaTime));
@@ -19,15 +17,12 @@ namespace Combat
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!IsServer || _isDestroying) return;
-            
-            if (!NetworkObject.IsSpawned) return;
+            if (!IsServer) return;
 
             var target = other.GetComponent<PlayerNetwork>();
-            
             if (target == null)
             {
-                DestroyProjectile();
+                StartCoroutine(Destroy());
                 return;
             }
 
@@ -36,22 +31,13 @@ namespace Combat
             int newHp = Mathf.Max(0, target.HP.Value - _damage);
             target.HP.Value = newHp;
 
-            DestroyProjectile();
+            StartCoroutine(Destroy());
         }
 
-        private void DestroyProjectile()
+        private IEnumerator Destroy()
         {
-            if (_isDestroying) return;
-            _isDestroying = true;
-            
-            if (NetworkObject != null && NetworkObject.IsSpawned)
-            {
-                NetworkObject.Despawn(destroy: true);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            yield return null;
+            NetworkObject.Despawn(destroy: true);
         }
     }
 }
