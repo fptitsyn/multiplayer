@@ -180,5 +180,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   ShowTopMostFoldoutHeaderGroup: 1
-  _speed: 18
+  _speed: 25
   _damage: 20

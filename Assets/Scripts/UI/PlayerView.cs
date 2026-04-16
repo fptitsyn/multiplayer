@@ -1,39 +1,69 @@
-﻿using TMPro;
+﻿using System.Collections;
+using Network;
+using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerView : NetworkBehaviour
+namespace UI
 {
-    [SerializeField] private PlayerNetwork playerNetwork;
-    [SerializeField] private TMP_Text nicknameText;
-    [SerializeField] private TMP_Text hpText;
-
-    public override void OnNetworkSpawn()
+    public class PlayerView : NetworkBehaviour
     {
-        // Подписываемся на изменения только после сетевого спавна объекта.
-        playerNetwork.Nickname.OnValueChanged += OnNicknameChanged;
-        playerNetwork.HP.OnValueChanged += OnHpChanged;
+        [SerializeField] private PlayerNetwork playerNetwork;
+        [SerializeField] private TMP_Text nicknameText;
+        [SerializeField] private TMP_Text hpText;
+        [SerializeField] private TMP_Text ammoText;
+        [SerializeField] private TMP_Text respawnTimerText;
+        
+        public override void OnNetworkSpawn()
+        {
+            playerNetwork.Nickname.OnValueChanged += OnNicknameChanged;
+            playerNetwork.HP.OnValueChanged += OnHpChanged;
+            playerNetwork.Ammo.OnValueChanged += OnAmmoChanged;
+            playerNetwork.PlayerDied += HandleRespawnTimer;
 
-        // Сразу рисуем текущее состояние, чтобы UI не ждал первого сетевого события.
-        OnNicknameChanged(default, playerNetwork.Nickname.Value);
-        OnHpChanged(0, playerNetwork.HP.Value);
-    }
+            OnNicknameChanged(default, playerNetwork.Nickname.Value);
+            OnHpChanged(0, playerNetwork.HP.Value);
+            OnAmmoChanged(0, playerNetwork.Ammo.Value);
+        }
 
-    public override void OnNetworkDespawn()
-    {
-        // Отписка обязательна, чтобы не оставлять "висячие" обработчики.
-        playerNetwork.Nickname.OnValueChanged -= OnNicknameChanged;
-        playerNetwork.HP.OnValueChanged -= OnHpChanged;
-    }
+        public override void OnNetworkDespawn()
+        {
+            playerNetwork.Nickname.OnValueChanged -= OnNicknameChanged;
+            playerNetwork.HP.OnValueChanged -= OnHpChanged;
+            playerNetwork.Ammo.OnValueChanged -= OnAmmoChanged;
+            playerNetwork.PlayerDied -= HandleRespawnTimer;
+        }
 
-    private void OnNicknameChanged(FixedString32Bytes oldValue, FixedString32Bytes newValue)
-    {
-        nicknameText.text = newValue.ToString();
-    }
+        private void OnNicknameChanged(FixedString32Bytes oldValue, FixedString32Bytes newValue)
+        {
+            nicknameText.text = newValue.ToString();
+        }
 
-    private void OnHpChanged(int oldValue, int newValue)
-    {
-        hpText.text = $"HP: {newValue}";
+        private void OnHpChanged(int oldValue, int newValue)
+        {
+            hpText.text = $"HP: {newValue}";
+        }
+
+        private void OnAmmoChanged(int oldValue, int newValue)
+        {
+            ammoText.text = $"Ammo: {newValue}";
+        }
+
+        private void HandleRespawnTimer()
+        {
+            StartCoroutine(CountRespawnTime());
+        }
+
+        private IEnumerator CountRespawnTime()
+        {
+            respawnTimerText.enabled = true;
+            for (int i = 3; i > 0; i--)
+            {
+                respawnTimerText.text = $"Respawn in: {i}...";
+                yield return new WaitForSeconds(1f);
+            }
+            respawnTimerText.enabled = false;
+        }
     }
 }
